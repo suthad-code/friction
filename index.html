@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบเรื่อง แรงเสียดทาน</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="bg-[#f0fdf4] min-h-screen text-slate-800 flex items-center justify-center p-4 selection:bg-teal-200 selection:text-teal-900">
+
+    <!-- Main Container -->
+    <div class="w-full max-w-2xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col relative transition-all duration-300 h-[85vh] sm:h-auto sm:min-h-[600px]">
+        
+        <!-- App Header -->
+        <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 md:p-8 text-center relative">
+            <h1 class="text-2xl md:text-3xl font-semibold text-teal-800 tracking-wide">แบบทดสอบ: แรงเสียดทาน</h1>
+            <p id="progress-text" class="text-teal-600 mt-2 font-medium">ข้อ 1 จาก 5</p>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-teal-100 rounded-full h-1.5 mt-4 overflow-hidden">
+                <div id="progress-bar" class="bg-teal-500 h-1.5 rounded-full transition-all duration-500 ease-out" style="width: 20%"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Area -->
+        <div id="quiz-area" class="flex-1 p-6 md:p-8 overflow-y-auto">
+            <!-- Question -->
+            <h2 id="question-text" class="text-lg md:text-xl font-medium text-slate-700 mb-6 leading-relaxed">
+                โหลดคำถาม...
+            </h2>
+
+            <!-- Options -->
+            <div id="options-container" class="space-y-3">
+                <!-- Buttons injected by JS -->
+            </div>
+
+            <!-- Explanation Box (Hidden by default) -->
+            <div id="explanation-box" class="hidden mt-6 p-5 rounded-2xl animate-fade-in border">
+                <div class="flex items-center gap-2 mb-2">
+                    <span id="explanation-icon" class="flex items-center justify-center"></span>
+                    <h3 id="explanation-title" class="font-semibold text-lg"></h3>
+                </div>
+                <p id="explanation-text" class="text-sm md:text-base leading-relaxed opacity-90"></p>
+            </div>
+        </div>
+
+        <!-- Result Area (Hidden by default) -->
+        <div id="result-area" class="hidden flex-1 p-6 md:p-8 flex flex-col items-center justify-center text-center animate-fade-in">
+            <div class="w-24 h-24 bg-teal-100 text-teal-500 rounded-full flex items-center justify-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-semibold text-slate-800 mb-2">สรุปคะแนนของคุณ</h2>
+            <p class="text-slate-500 mb-6">คุณทำแบบทดสอบเรื่องแรงเสียดทานสำเร็จแล้ว!</p>
+            <div class="text-5xl font-bold text-teal-600 mb-8 tracking-tighter">
+                <span id="score-text">0</span><span class="text-3xl text-slate-400 font-medium">/5</span>
+            </div>
+            <button onclick="restartQuiz()" class="px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-full font-medium transition-colors shadow-lg shadow-teal-500/30 active:scale-95">
+                ทำแบบทดสอบอีกครั้ง
+            </button>
+        </div>
+
+        <!-- Footer Controls -->
+        <div id="controls-area" class="bg-slate-50/50 p-4 md:p-6 border-t border-slate-100 flex justify-between items-center mt-auto backdrop-blur-sm">
+            <button id="btn-prev" onclick="goPrev()" class="px-5 py-2.5 rounded-xl text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-teal-600 transition-all shadow-sm flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                ย้อนกลับ
+            </button>
+            <button id="btn-next" onclick="goNext()" class="px-6 py-2.5 rounded-xl text-white bg-teal-500 hover:bg-teal-600 transition-all shadow-md shadow-teal-500/20 flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                ถัดไป
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // ข้อมูลคำถาม
+        const quizData = [
+            {
+                question: "ข้อใดคือความหมายของ 'แรงเสียดทาน' ได้ถูกต้องที่สุด?",
+                options: [
+                    "แรงที่โลกดึงดูดวัตถุให้ตกลงสู่พื้น",
+                    "แรงที่เกิดขึ้นเพื่อต่อต้านการเคลื่อนที่ของวัตถุ",
+                    "แรงที่ทำให้วัตถุเคลื่อนที่ไปข้างหน้าได้เร็วขึ้น",
+                    "แรงดึงดูดระหว่างมวลของวัตถุสองก้อน"
+                ],
+                correctIndex: 1,
+                explanation: "แรงเสียดทาน (Friction) คือแรงที่เกิดขึ้นระหว่างผิวสัมผัสของวัตถุ โดยมีทิศทางตรงกันข้ามกับการเคลื่อนที่เสมอ เพื่อต้านทานการเคลื่อนที่ของวัตถุนั้นๆ"
+            },
+            {
+                question: "ปัจจัยใดต่อไปนี้มีผลต่อขนาดของแรงเสียดทานมากที่สุด?",
+                options: [
+                    "ความเร็วในการเคลื่อนที่ของวัตถุ",
+                    "พื้นที่ผิวสัมผัสของวัตถุ (เล็กหรือใหญ่)",
+                    "อุณหภูมิของวัตถุขณะเคลื่อนที่",
+                    "น้ำหนักของวัตถุและลักษณะความขรุขระของพื้นผิว"
+                ],
+                correctIndex: 3,
+                explanation: "ขนาดของแรงเสียดทานขึ้นอยู่กับแรงกดทับ (น้ำหนักของวัตถุ) และลักษณะของผิวสัมผัส (เรียบหรือขรุขระ) ส่วน 'พื้นที่ผิว' ขนาดใหญ่หรือเล็กไม่มีผลต่อขนาดของแรงเสียดทาน"
+            },
+            {
+                question: "การกระทำในข้อใดถือเป็นการ 'ลด' แรงเสียดทาน?",
+                options: [
+                    "การออกแบบให้ยางรถยนต์มีดอกยางลึกๆ",
+                    "การทายางสนที่คันชักของไวโอลิน",
+                    "การหยอดน้ำมันหล่อลื่นที่บานพับประตูบ้าน",
+                    "การสวมรองเท้าสตั๊ด (มีปุ่มที่พื้น) ลงเตะฟุตบอล"
+                ],
+                correctIndex: 2,
+                explanation: "การหยอดน้ำมันหล่อลื่นช่วยเติมเต็มรอยขรุขระของผิวสัมผัส ทำให้พื้นผิวลื่นขึ้น จึงเป็นการ 'ลด' แรงเสียดทาน (ส่วนข้ออื่นเป็นการเพิ่มแรงเสียดทานทั้งหมด)"
+            },
+            {
+                question: "แรงเสียดทานสถิต (Static Friction) จะเกิดขึ้นในสถานการณ์ใด?",
+                options: [
+                    "เมื่อเราออกแรงผลักตู้ แต่ตู้ยังคงหยุดนิ่งไม่ขยับ",
+                    "เมื่อรถยนต์กำลังวิ่งด้วยความเร็วคงที่บนถนน",
+                    "เมื่อเรากำลังลากกล่องให้ไถลไปบนพื้นเรียบ",
+                    "เมื่อวัตถุลอยนิ่งๆ อยู่ในอวกาศที่ไม่มีอากาศ"
+                ],
+                correctIndex: 0,
+                explanation: "แรงเสียดทานสถิต คือ แรงเสียดทานที่เกิดขึ้นในขณะที่มีแรงมากระทำต่อวัตถุเพื่อพยายามทำให้วัตถุเคลื่อนที่ แต่ตราบใดที่วัตถุ 'ยังไม่เคลื่อนที่' แรงเสียดทานนั้นคือแรงเสียดทานสถิต"
+            },
+            {
+                question: "ข้อใดคือ 'ประโยชน์' ของแรงเสียดทานที่สำคัญที่สุดในชีวิตประจำวันของเรา?",
+                options: [
+                    "ทำให้เครื่องยนต์เกิดความร้อนสูงขณะทำงาน",
+                    "ทำให้เราสามารถเดินไปข้างหน้าได้โดยไม่ลื่นล้ม",
+                    "ทำให้ชิ้นส่วนของเครื่องจักรเกิดการสึกหรอ",
+                    "ทำให้ต้องใช้แรงมากขึ้นในการเข็นรถที่เสีย"
+                ],
+                correctIndex: 1,
+                explanation: "การที่เราสามารถทรงตัว เดิน หรือวิ่งบนพื้นได้ เป็นเพราะมีแรงเสียดทานระหว่างพื้นรองเท้ากับพื้นถนนคอยยึดเกาะไว้ หากไม่มีแรงเสียดทานเราจะลื่นล้มทันที"
+            }
+        ];
+
+        let currentIndex = 0;
+        let answers = new Array(quizData.length).fill(null); // เก็บคำตอบที่เลือก: { selected: index, isCorrect: boolean }
+
+        // DOM Elements
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const progressText = document.getElementById('progress-text');
+        const progressBar = document.getElementById('progressBar');
+        const explanationBox = document.getElementById('explanation-box');
+        const explanationIcon = document.getElementById('explanation-icon');
+        const explanationTitle = document.getElementById('explanation-title');
+        const explanationText = document.getElementById('explanation-text');
+        
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const quizArea = document.getElementById('quiz-area');
+        const resultArea = document.getElementById('result-area');
+        const controlsArea = document.getElementById('controls-area');
+
+        // Icons
+        const iconCorrect = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+        const iconWrong = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            // Reset views
+            explanationBox.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            const currentQ = quizData[currentIndex];
+            
+            // Update Header texts
+            progressText.innerText = `ข้อ ${currentIndex + 1} จาก ${quizData.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / quizData.length) * 100}%`;
+            questionText.innerText = `${currentIndex + 1}. ${currentQ.question}`;
+
+            // Create Options
+            currentQ.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl border-2 transition-all duration-200 text-slate-600 font-medium
+                                 hover:bg-teal-50 hover:border-teal-200 bg-slate-50 border-transparent relative overflow-hidden group`;
+                
+                btn.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-400 group-hover:border-teal-300 group-hover:text-teal-500 mr-3 transition-colors">
+                            ${String.fromCharCode(65 + idx)} <!-- A, B, C, D -->
+                        </div>
+                        <span class="flex-1">${optText}</span>
+                    </div>
+                `;
+                
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // If already answered, restore state
+            if (answers[currentIndex] !== null) {
+                applyAnswerState(answers[currentIndex].selected, currentQ.correctIndex);
+            }
+
+            updateControls();
+        }
+
+        function selectOption(selectedIndex) {
+            // Prevent changing answer if already selected for this question
+            if (answers[currentIndex] !== null) return;
+
+            const currentQ = quizData[currentIndex];
+            const isCorrect = selectedIndex === currentQ.correctIndex;
+
+            // Save answer
+            answers[currentIndex] = {
+                selected: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            applyAnswerState(selectedIndex, currentQ.correctIndex);
+            updateControls();
+            
+            // Smooth scroll to explanation
+            setTimeout(() => {
+                explanationBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        function applyAnswerState(selectedIndex, correctIndex) {
+            const currentQ = quizData[currentIndex];
+            const isCorrect = selectedIndex === correctIndex;
+            const buttons = optionsContainer.children;
+
+            // Disable all buttons
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+                buttons[i].classList.remove('hover:bg-teal-50', 'hover:border-teal-200');
+                buttons[i].classList.add('cursor-default', 'opacity-60');
+            }
+
+            // Styling function
+            const setStyle = (btn, type) => {
+                btn.classList.remove('bg-slate-50', 'border-transparent', 'opacity-60');
+                const circle = btn.querySelector('div > div');
+                if (type === 'correct') {
+                    btn.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-100');
+                    circle.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+                    circle.classList.remove('bg-white', 'text-slate-400');
+                } else if (type === 'wrong') {
+                    btn.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800', 'opacity-100');
+                    circle.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+                    circle.classList.remove('bg-white', 'text-slate-400');
+                }
+            };
+
+            // Apply styles
+            if (isCorrect) {
+                setStyle(buttons[selectedIndex], 'correct');
+            } else {
+                setStyle(buttons[selectedIndex], 'wrong');
+                setStyle(buttons[correctIndex], 'correct'); // Show correct answer too
+            }
+
+            // Show Explanation
+            explanationBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-800', 'bg-rose-50', 'border-rose-200', 'text-rose-800');
+            
+            if (isCorrect) {
+                explanationBox.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+                explanationIcon.innerHTML = iconCorrect;
+                explanationTitle.innerText = "ถูกต้องยอดเยี่ยม!";
+            } else {
+                explanationBox.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+                explanationIcon.innerHTML = iconWrong;
+                explanationTitle.innerText = "ยังไม่ถูกต้องนะ";
+            }
+            
+            explanationText.innerHTML = `<strong>คำอธิบาย:</strong> ${currentQ.explanation}`;
+        }
+
+        function updateControls() {
+            // Prev Button
+            btnPrev.disabled = currentIndex === 0;
+
+            // Next Button logic: must answer first to proceed
+            if (answers[currentIndex] === null) {
+                btnNext.disabled = true;
+                btnNext.innerText = "ถัดไป";
+            } else {
+                btnNext.disabled = false;
+                if (currentIndex === quizData.length - 1) {
+                    btnNext.innerText = "ดูผลคะแนน";
+                } else {
+                    btnNext.innerText = "ถัดไป";
+                }
+            }
+        }
+
+        function goNext() {
+            if (currentIndex < quizData.length - 1) {
+                currentIndex++;
+                renderQuestion();
+                // Scroll back to top of quiz area
+                quizArea.scrollTop = 0;
+            } else {
+                showResults();
+            }
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+                quizArea.scrollTop = 0;
+            }
+        }
+
+        function showResults() {
+            // Calculate Score
+            const score = answers.filter(ans => ans && ans.isCorrect).length;
+            
+            document.getElementById('score-text').innerText = score;
+            
+            // Toggle Views
+            document.querySelector('.bg-gradient-to-r').classList.add('hidden');
+            quizArea.classList.add('hidden');
+            controlsArea.classList.add('hidden');
+            resultArea.classList.remove('hidden');
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            answers = new Array(quizData.length).fill(null);
+            
+            // Toggle Views back
+            document.querySelector('.bg-gradient-to-r').classList.remove('hidden');
+            quizArea.classList.remove('hidden');
+            controlsArea.classList.remove('hidden');
+            resultArea.classList.add('hidden');
+            
+            initQuiz();
+        }
+
+        // Initialize on load
+        window.onload = initQuiz;
+
+    </script>
+</body>
+</html>
