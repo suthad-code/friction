@@ -50,10 +50,10 @@
         }
     </style>
 </head>
-<body class="bg-[#f0fdf4] min-h-screen text-slate-800 flex items-center justify-center p-4 selection:bg-teal-200 selection:text-teal-900">
+<body class="bg-[#f0fdf4] min-h-screen text-slate-800 flex items-center justify-center sm:p-4 selection:bg-teal-200 selection:text-teal-900">
 
     <!-- Main Container -->
-    <div class="w-full max-w-2xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col relative transition-all duration-300 h-[85vh] sm:h-auto sm:min-h-[600px]">
+    <div class="w-full max-w-2xl bg-white sm:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col relative transition-all duration-300 h-[100dvh] sm:h-auto sm:min-h-[600px]">
         
         <!-- App Header -->
         <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-6 md:p-8 text-center relative">
@@ -98,7 +98,7 @@
             <h2 class="text-3xl font-semibold text-slate-800 mb-2">สรุปคะแนนของคุณ</h2>
             <p class="text-slate-500 mb-6">คุณทำแบบทดสอบเรื่องแรงเสียดทานสำเร็จแล้ว!</p>
             <div class="text-5xl font-bold text-teal-600 mb-8 tracking-tighter">
-                <span id="score-text">0</span><span class="text-3xl text-slate-400 font-medium">/5</span>
+                <span id="score-text">0</span><span id="total-score-text" class="text-3xl text-slate-400 font-medium">/10</span>
             </div>
             <button onclick="restartQuiz()" class="px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-full font-medium transition-colors shadow-lg shadow-teal-500/30 active:scale-95">
                 ทำแบบทดสอบอีกครั้ง
@@ -180,6 +180,61 @@
                 ],
                 correctIndex: 1,
                 explanation: "การที่เราสามารถทรงตัว เดิน หรือวิ่งบนพื้นได้ เป็นเพราะมีแรงเสียดทานระหว่างพื้นรองเท้ากับพื้นถนนคอยยึดเกาะไว้ หากไม่มีแรงเสียดทานเราจะลื่นล้มทันที"
+            },
+            {
+                question: "ผิวสัมผัสแบบใดมีแรงเสียดทานน้อยที่สุด?",
+                options: [
+                    "พื้นทราย",
+                    "พื้นคอนกรีต",
+                    "พื้นกระเบื้องเปียกน้ำ",
+                    "พื้นหญ้า"
+                ],
+                correctIndex: 2,
+                explanation: "น้ำจะเข้าไปแทรกระหว่างผิวสัมผัสของกระเบื้อง ทำให้พื้นผิวลื่นและลดแรงเสียดทานลงอย่างมาก จึงทำให้เกิดอุบัติเหตุลื่นล้มได้ง่าย"
+            },
+            {
+                question: "เมื่อเราหยุดปั่นจักรยาน ทำไมจักรยานจึงค่อยๆ ช้าลงจนหยุดนิ่ง?",
+                options: [
+                    "เพราะยางล้อรถหมดลม",
+                    "เพราะเกิดแรงเสียดทานระหว่างล้อกับพื้นถนน",
+                    "เพราะแรงโน้มถ่วงของโลกดึงรถไว้",
+                    "เพราะจักรยานมีน้ำหนักมากเกินไป"
+                ],
+                correctIndex: 1,
+                explanation: "แรงเสียดทานระหว่างล้อจักรยานกับพื้นถนนจะคอยต้านการเคลื่อนที่ของจักรยาน ทำให้จักรยานค่อยๆ ช้าลงและหยุดนิ่งในที่สุด"
+            },
+            {
+                question: "อุปกรณ์ในข้อใดออกแบบมาเพื่อ 'เพิ่ม' แรงเสียดทาน?",
+                options: [
+                    "ลูกปืนในแกนล้อจักรยาน",
+                    "น้ำมันหล่อลื่นโซ่",
+                    "แผ่นกันลื่นในห้องน้ำ",
+                    "สไลเดอร์ในสวนน้ำ"
+                ],
+                correctIndex: 2,
+                explanation: "แผ่นกันลื่นถูกออกแบบให้มีผิวขรุขระ เพื่อเพิ่มแรงเสียดทาน ป้องกันไม่ให้เราลื่นล้มเมื่อพื้นเปียกน้ำ"
+            },
+            {
+                question: "ข้อใดคือ 'ผลเสีย' ของแรงเสียดทาน?",
+                options: [
+                    "ทำให้เราจับแก้วน้ำได้โดยไม่หลุดมือ",
+                    "ทำให้พื้นรองเท้าสึกหรอเมื่อใช้ไปนานๆ",
+                    "ทำให้รถยนต์เบรกและหยุดได้อย่างปลอดภัย",
+                    "ทำให้สามารถจุดไม้ขีดไฟให้ติดไฟได้"
+                ],
+                correctIndex: 1,
+                explanation: "แรงเสียดทานทำให้เกิดการเสียดสี ซึ่งส่งผลให้วัตถุเกิดความร้อนและการสึกหรอ เช่น พื้นรองเท้าหรือดอกยางรถยนต์ที่สึกเมื่อใช้งานไปนานๆ ถือเป็นผลเสียของแรงเสียดทาน"
+            },
+            {
+                question: "หากไม่มีแรงเสียดทานเลย จะเกิดอะไรขึ้นเมื่อเรากลิ้งลูกบอลบนพื้นราบ?",
+                options: [
+                    "ลูกบอลจะหยุดทันที",
+                    "ลูกบอลจะกลิ้งช้าลงเรื่อยๆ",
+                    "ลูกบอลจะกลิ้งไปข้างหน้าเรื่อยๆ ไม่หยุด",
+                    "ลูกบอลจะลอยขึ้นไปในอากาศ"
+                ],
+                correctIndex: 2,
+                explanation: "ตามกฎการเคลื่อนที่ หากไม่มีแรงใดๆ (รวมถึงแรงเสียดทาน) มากระทำเพื่อต้านการเคลื่อนที่ วัตถุจะรักษาสภาพการเคลื่อนที่นั้นไปเรื่อยๆ โดยไม่หยุด"
             }
         ];
 
@@ -207,6 +262,7 @@
         const iconWrong = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
 
         function initQuiz() {
+            document.getElementById('total-score-text').innerText = `/${quizData.length}`;
             renderQuestion();
         }
 
